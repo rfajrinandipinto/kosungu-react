@@ -48,25 +48,28 @@ const ProductList = (props) => {
     );
   };
 
-  // const Product = () => {
-  //   return (
-  //     <div className="flex items-center">
-  //       <div className="container mx-auto xl:px-20  lg:px-10 my-5">
-  //         <div className="flex flex-col">
-  //           <p className="text-2xl font-semibold mb-3">{props.title}</p>
-  //           <div className="grid gap-5 grid-cols-4">
-  //             <ItemCard />
-  //             <ItemCard />
-  //             <ItemCard />
-  //             <ItemCard />
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // };
+  const Product = () => {
+    return (
+      <div className="flex items-center">
+        <div className="container mx-auto xl:px-20  lg:px-10 my-5">
+          <div className="flex flex-col">
+            <p className="text-2xl font-semibold mb-3">{props.title}</p>
+            <div className="grid gap-5 grid-cols-4">
+              {data.slice(0, 4).map((e) => {
+                return (
+                  <SwiperSlide>
+                    <ItemCard data={e} />
+                  </SwiperSlide>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
-  return <div className="productList-component flex flex-col items-center relative">{ProductSlider()}</div>;
+  return <div className="productList-component flex flex-col items-center relative">{props.type == "slider" ? ProductSlider() : Product()}</div>;
 };
 
 export default ProductList;

@@ -2,8 +2,27 @@ import React from "react";
 import { BsGeoAltFill, BsWhatsapp, BsBuilding, BsFillLightningFill } from "react-icons/bs";
 import { GoogleMap, useJsApiLoader, LoadScript, MarkerClusterer, Marker } from "@react-google-maps/api";
 import ItemCard from "./ItemCard";
+import { useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-const PaymentDetail = () => {
+const PaymentDetail = ({ route, navigate }) => {
+  const location = useLocation();
+  const data = location.state.data;
+
+  const [userData, setUserData] = useState("");
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+
+    const headers = {
+      Authorization: `JWT ${token}`,
+    };
+
+    axios.get("http://localhost:3000/auth/whoami", { headers }).then((response) => setUserData(response.data));
+  }, []);
+
   return (
     <div className="PaymentDetail-component my-6 ">
       <div className="container mx-auto xl:px-16  lg:px-10 pb-6">
@@ -15,7 +34,7 @@ const PaymentDetail = () => {
               <div className="flex gap-10">
                 <div className="flex flex-col basis-1/2">
                   <p className="text-lg mb-1 font-semibold">Nama</p>
-                  <input type="text" className="w-full p-2 border-b outline-none text-lg mb-6 bg-gray-100 rounded" placeholder="Masukkan Email Anda" required />
+                  <input type="text" className="w-full p-2 border-b outline-none text-lg mb-6 bg-gray-100 rounded" placeholder="Masukkan Email Anda" value={userData.nama} required />
                 </div>
                 <div className="flex flex-col basis-1/2"></div>
               </div>
@@ -23,12 +42,12 @@ const PaymentDetail = () => {
               <div className="flex gap-10 border-b mb-2">
                 <div className="flex flex-col basis-1/2">
                   <p className="text-lg mb-1 font-semibold">Email</p>
-                  <input type="text" className="w-full p-2 border rounded outline-none text-lg mb-6 bg-gray-100 " placeholder="Masukkan Email Anda" required />
+                  <input type="text" className="w-full p-2 border rounded outline-none text-lg mb-6 bg-gray-100 " placeholder="Masukkan Email Anda" value={userData.email} required />
                 </div>
 
                 <div className="flex flex-col basis-1/2">
                   <p className="text-lg mb-1 font-semibold">Nomor Telepon</p>
-                  <input type="email" className="w-full p-2 border-b outline-none text-lg mb-6 bg-gray-100 rounded" placeholder="Masukkan no telepon Anda" required />
+                  <input type="email" className="w-full p-2 border-b outline-none text-lg mb-6 bg-gray-100 rounded" placeholder="Masukkan no telepon Anda" value={userData.no_telp} required />
                 </div>
               </div>
 
@@ -37,7 +56,7 @@ const PaymentDetail = () => {
               <div className="flex gap-10 border-b pb-2">
                 <div className="flex flex-col basis-1/2">
                   <p className="text-lg mb-2 font-semibold">Nama Kos / Kontrakan</p>
-                  <input type="text" className="w-full p-2 border-b outline-none text-lg mb-6 border rounded" value={"Kost Apik Putri Shasri"} disabled />
+                  <input type="text" className="w-full p-2 border-b outline-none text-lg mb-6 border rounded" value={data.nama} disabled />
                 </div>
                 <div className="flex flex-col basis-1/2">
                   <p className="text-lg mb-2 font-semibold">Durasi Sewa</p>
@@ -54,7 +73,7 @@ const PaymentDetail = () => {
               <div className="flex gap-10">
                 <div className="flex flex-col basis-1/2">
                   <p className="text-lg mb-2 font-semibold">Metode Pembayaran</p>
-                  <input type="text" className="w-full p-2 border-b outline-none text-lg mb-6 border rounded" value={"Kost Apik Putri Shasri"} disabled />
+                  <input type="text" className="w-full p-2 border-b outline-none text-lg mb-6 border rounded" value={"transfer bank"} disabled />
                 </div>
                 <div className="flex flex-col basis-1/2"></div>
               </div>
@@ -70,7 +89,7 @@ const PaymentDetail = () => {
             </div>
           </div>
           <div className="basis-1/3">
-            <ItemCard type="payment" />
+            <ItemCard type="payment" data={data} />
           </div>
         </div>
       </div>

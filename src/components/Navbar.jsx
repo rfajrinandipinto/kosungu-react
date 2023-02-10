@@ -40,10 +40,22 @@ const Navbar = () => {
                 </button>
               </form>
             </div>
-            {Cookies.get("loggedIn") ? (
-              <div className="flex items-center border py-2 px-3 rounded gap-2 hover:text-purple-500 hover:shadow " onClick={() => toggleModal()}>
-                <BsFillPersonFill className="text-gray-400 hover:text-purple-500" />
-                <p>{Cookies.get("nama")}</p>
+            {Cookies.get("loggedIn") == "true" ? (
+              <div className="flex gap-4">
+                <div className="flex items-center border py-2 px-3 rounded gap-2 hover:text-purple-500 hover:shadow ">
+                  <BsFillPersonFill className="text-gray-400 hover:text-purple-500" />
+                  <p>{Cookies.get("nama")}</p>
+                </div>
+                <div
+                  className="flex items-center border py-2 px-3 rounded gap-2 bg-red-500 text-white hover:shadow "
+                  onClick={() => {
+                    Cookies.remove("nama", "token");
+                    Cookies.set("loggedIn", "false");
+                    window.location.reload();
+                  }}
+                >
+                  <p>Logout</p>
+                </div>
               </div>
             ) : (
               <div className="flex items-center border py-2 px-3 rounded gap-2 hover:text-purple-500 hover:shadow " onClick={() => toggleModal()}>

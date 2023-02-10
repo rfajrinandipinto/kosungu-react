@@ -8,11 +8,11 @@ const ItemCard = (props) => {
         return (
           <div className={"border rounded basis-1/4 overflow-hidden "}>
             <div className="flex relative basis-2/5">
-              <img src="/kos-1.jpg" alt="" className=" object-cover h-full w-full" />
+              <img src={props.data.image[0]} alt="" className=" object-cover h-full w-full" />
             </div>
 
             <div className="flex flex-col p-4 basis-3/5">
-              <p className="border rounded py-1 px-3 font-semibold  bg-white w-min shadow mb-2">campur</p>
+              <p className="border rounded py-1 px-3 font-semibold  bg-white w-min shadow mb-2">{props.data.tipe}</p>
               <p></p>
               <p className="font-bold">Depok</p>
               <div className="flex gap-1 text-gray-400 border-b pb-3">
@@ -23,17 +23,17 @@ const ItemCard = (props) => {
 
               <div className="flex mt-1 justify-between text-lg">
                 <p>Durasi :</p>
-                <p>Per 3 Bulan</p>
+                <p>Per Bulan</p>
               </div>
 
               <div className="flex justify-between text-lg border-b pb-2 border-black">
                 <p>Total Biaya :</p>
-                <p>Rp 1.500.000</p>
+                <p>Rp {props.data.harga}</p>
               </div>
 
               <div className="flex justify-between text-lg mt-2">
                 <p>Total :</p>
-                <p className="font-bold">Rp 1.500.000</p>
+                <p className="font-bold">Rp {props.data.harga}</p>
               </div>
 
               <div
@@ -72,26 +72,24 @@ const ItemCard = (props) => {
       case "dashboard":
         return (
           <div className={"border rounded w-full overflow-hidden flex items-center"}>
-            <div className="flex relative">
-              <img src="/kos-1.jpg" alt="" className="h-48 object-cover w-full" />
-              <p className="border rounded py-1 px-3 font-semibold absolute bg-white right-3 top-3">Campur</p>
+            <div className="flex relative basis-1/3">
+              <img src={props.data.image[0]} alt="" className="h-48 object-cover " />
+              <p className="border rounded py-1 px-3 font-semibold absolute bg-white right-3 top-3">{props.data.tipe}</p>
             </div>
 
-            <div className="flex">
+            <div className="flex basis-1/4">
               <div className="flex flex-col p-4">
                 <p className="text-lg font-semibold">Nama </p>
                 <p className="text-lg font-semibold">Kategori </p>
                 <p className="text-lg font-semibold">Harga </p>
                 <p className="text-lg font-semibold">Lokasi </p>
-                <p className="text-lg font-semibold">fasilitas </p>
               </div>
             </div>
-            <div className="flex flex-col p-4 flex-grow">
-              <p className="text-lg font-semibold">: Kost Apik Puri Shastri</p>
-              <p className="text-lg font-semibold"> : Kost</p>
-              <p className="text-lg font-semibold">: Rp 750.00</p>
+            <div className="flex flex-col p-4 flex-grow basis-1/3">
+              <p className="text-lg font-semibold">: {props.data.nama}</p>
+              <p className="text-lg font-semibold"> : {props.data.kategori}</p>
+              <p className="text-lg font-semibold">: Rp {props.data.harga}</p>
               <p className="text-lg font-semibold">: Depok</p>
-              <p className="text-lg font-semibold">: WiFi · Kasur</p>
             </div>
           </div>
         );
@@ -125,21 +123,23 @@ const ItemCard = (props) => {
         return (
           <div className={"border rounded basis-1/4 overflow-hidden"}>
             <div className="flex relative">
-              <img src="/kos-1.jpg" alt="" className="h-48 object-cover w-full" />
-              <p className="border rounded py-1 px-3 font-semibold absolute bg-white right-3 top-3">Campur</p>
+              <img src={props.data.image[0]} alt="" className="h-48 object-cover w-full" />
+              <p className="border rounded py-1 px-3 font-semibold absolute bg-white right-3 top-3">{props.data.tipe}</p>
             </div>
 
             <div className="flex flex-col p-4">
               <p className="text-lg font-semibold">
                 Rp {props.data.harga.toLocaleString()} <span className="text-base font-normal">/bulan</span>{" "}
               </p>
-              <p></p>
+              <p>{props.data.nama}</p>
               <p className="font-bold">Depok</p>
               <div className="flex gap-1 text-gray-400">
                 <p>WiFi</p> · <p> Kasur</p>
               </div>
               <div className="flex gap-1 mt-2">
-                <button className="bg-purple-600 py-1 px-4 rounded text-white font-semibold">Detail</button>
+                <a href={"detail/" + props.data._id}>
+                  <button className="bg-purple-600 py-1 px-4 rounded text-white font-semibold">Detail</button>
+                </a>
                 <button className=" py-2 px-3 rounded text-gray-400 border-2 font-semibold flex items-center">
                   <BsFillHeartFill />
                 </button>

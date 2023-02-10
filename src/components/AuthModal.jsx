@@ -202,10 +202,10 @@ const AuthModal = ({ modal, toggleModal, form, toggleForm }) => {
       .catch((err) => console.log(err))
       .then((res) => {
         console.log(res.data);
+        Cookies.set("id", res.data._id);
         Cookies.set("token", res.data.token);
         Cookies.set("nama", res.data.nama);
         Cookies.set("loggedIn", true);
-        console.log(Cookies.get());
       })
       .then(() => {
         toggleModal();

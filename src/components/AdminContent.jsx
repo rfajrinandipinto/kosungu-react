@@ -22,9 +22,7 @@ const AdminContent = (props) => {
   return (
     <div className="AdminContent-component my-6">
       <div className="container mx-auto xl:px-8  lg:px-10 pb-6">
-        <div className="flex">
-          <AdminDashboard />
-        </div>
+        <div className="flex">{renderPage()}</div>
       </div>
     </div>
   );

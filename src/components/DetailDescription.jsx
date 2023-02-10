@@ -1,40 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { BsGeoAltFill, BsWhatsapp, BsBuilding, BsFillLightningFill } from "react-icons/bs";
-import { GoogleMap, useJsApiLoader, LoadScript, MarkerClusterer, Marker } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, LoadScript, MarkerClusterer, MarkerF, Data } from "@react-google-maps/api";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const DetailDescription = () => {
+const DetailDescription = (props) => {
+  const [data, setData] = useState(props.data);
+
+  console.log(props.data);
+
+  let location = {
+    lat: parseFloat(data.lokasi[0].lat),
+    lng: parseFloat(data.lokasi[0].lng),
+  };
+
+  function setHarga(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  let harga = data.harga;
+
   const containerStyle = {
     width: "100%",
     height: "400px",
   };
 
-  const center = { lat: -28.024, lng: 140.887 };
+  const center = { lat: location.lat, lng: location.lng };
 
-  const locations = [
-    { lat: -31.56391, lng: 147.154312 },
-    { lat: -33.718234, lng: 150.363181 },
-    { lat: -33.727111, lng: 150.371124 },
-    { lat: -33.848588, lng: 151.209834 },
-    { lat: -33.851702, lng: 151.216968 },
-    { lat: -34.671264, lng: 150.863657 },
-    { lat: -35.304724, lng: 148.662905 },
-    { lat: -36.817685, lng: 175.699196 },
-    { lat: -36.828611, lng: 175.790222 },
-    { lat: -37.75, lng: 145.116667 },
-    { lat: -37.759859, lng: 145.128708 },
-    { lat: -37.765015, lng: 145.133858 },
-    { lat: -37.770104, lng: 145.143299 },
-    { lat: -37.7737, lng: 145.145187 },
-    { lat: -37.774785, lng: 145.137978 },
-    { lat: -37.819616, lng: 144.968119 },
-    { lat: -38.330766, lng: 144.695692 },
-    { lat: -39.927193, lng: 175.053218 },
-    { lat: -41.330162, lng: 174.865694 },
-    { lat: -42.734358, lng: 147.439506 },
-    { lat: -42.734358, lng: 147.501315 },
-    { lat: -42.735258, lng: 147.438 },
-    { lat: -43.999792, lng: 170.463352 },
-  ];
+  const locations = [{ lat: location.lat, lng: location.lng }];
 
   const options = {
     imagePath: "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
@@ -63,18 +56,24 @@ const DetailDescription = () => {
     setMap(null);
   }, []);
 
+  const navigate = useNavigate();
+
+  const paymentButton = (id) => {
+    navigate(`/payment/`, { state: { id: id, data: data } });
+  };
+
   return (
     <div className="header-component ">
       <div className="container mx-auto xl:px-16  lg:px-10 pb-6">
         <div className="flex gap-4">
           <div className="basis-2/3 pr-2">
-            <p className="text-xl font-semibold mb-5">Kost Binus Kemanggisan Tipe A</p>
+            <p className="text-xl font-semibold mb-5">{data.nama}</p>
 
             <div className="flex my-2 gap-3 mb-5">
-              <p className="border rounded py-1 px-3 font-semibold  bg-white right-3 bottom-3 text-black">Kos Campur</p>
+              <p className="border rounded py-1 px-3 font-semibold  bg-white right-3 bottom-3 text-black">{data.tipe}</p>
               <div className="flex items-center gap-1">
                 <BsGeoAltFill className="text-lg text-purple-600" />
-                <p>Lokasi</p>
+                <p>{data.alamat}</p>
               </div>
             </div>
             <div className="flex justify-between border-y py-3 items-center">
@@ -121,17 +120,9 @@ const DetailDescription = () => {
                   <BsFillLightningFill className="text-xl" />
                   <p>Cermin</p>
                 </div>
-                <div className="flex gap-2 basis-2/4 mb-2">
-                  <BsFillLightningFill className="text-xl" />
-                  <p>Cermin</p>
-                </div>
-                <div className="flex gap-2 basis-2/4 mb-2">
-                  <BsFillLightningFill className="text-xl" />
-                  <p>Cermin</p>
-                </div>
               </div>
             </div>
-            <div className="flex py-3 flex-col border-b">
+            {/* <div className="flex py-3 flex-col border-b">
               <p className="mb-3 font-semibold text-xl">Peraturan Khusus</p>
               <div className="flex flex-col gap-1">
                 <div className="flex gap-2">
@@ -151,19 +142,19 @@ const DetailDescription = () => {
                   <p>Termasuk Listrik</p>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="flex py-3 flex-col border-b">
-              <p className="mb-3 font-semibold text-xl">Peraturan Khusus</p>
+              <p className="mb-3 font-semibold text-xl">Lokasi</p>
               <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-1 mb-2">
+                {/* <div className="flex items-center gap-1 mb-2">
                   <BsGeoAltFill className="text-lg text-purple-600" />
                   <p>Lokasi</p>
-                </div>
+                </div> */}
 
                 <div className="flex">
                   {isLoaded ? (
-                    <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10} onLoad={onLoad} onUnmount={onUnmount}>
-                      <MarkerClusterer options={options}>{(clusterer) => locations.map((location) => <Marker key={createKey(location)} position={location} clusterer={clusterer} />)}</MarkerClusterer>
+                    <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={5} onLoad={onLoad} onUnmount={onUnmount}>
+                      <MarkerF position={{ lat: location.lat, lng: location.lng }} />
                     </GoogleMap>
                   ) : (
                     <></>
@@ -175,15 +166,14 @@ const DetailDescription = () => {
           <div className="basis-1/3">
             <div className="flex flex-col shadow-lg p-4 border rounded sticky top-20">
               <p className="text-2xl font-semibold">
-                Rp 747.00 <span className="text-lg">/ bulan</span>{" "}
+                Rp {setHarga(data.harga)} <span className="text-lg">/ bulan</span>{" "}
               </p>
               <div className=" flex items-center ">
                 <form action="" className="flex my-3 w-full">
                   <select className=" bg-gray-100 border text-sm py-3 px-3 focus:border-purple-500 focus:outline-none w-full " placeholder="Type">
-                    <option selected>All Type</option>
-                    <option value="kos">Per Bulan</option>
-                    <option value="kos">Per 3 Bulan</option>
-                    <option value="kos">Per 6 Bulan</option>
+                    <option value="1">Per Bulan</option>
+                    <option value="3">Per 3 Bulan</option>
+                    <option value="6">Per 6 Bulan</option>
                   </select>
                 </form>
               </div>
@@ -191,7 +181,7 @@ const DetailDescription = () => {
                 <BsWhatsapp className="text-xl" />
                 <p className="flex">Chat Pemilik</p>
               </div>
-              <div className="border justify-center rounded py-2 px-5 font-semibold text-white bg-purple-600 flex items-center gap-3">
+              <div className="border justify-center rounded py-2 px-5 font-semibold text-white bg-purple-600 flex items-center gap-3 cursor-pointer" onClick={() => paymentButton(data._id)}>
                 <p className="flex">Sewa Sekarang</p>
               </div>
             </div>
